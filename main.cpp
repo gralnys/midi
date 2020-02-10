@@ -36,7 +36,7 @@ int main() {
         cin >> word;
 
         if (word == "ports") getOpenPorts(midiIn, midiOut);
-        else if (word == "open") {
+        else if (word == "connect") {
             int portToOpen;
             cin >> argument;
             cin >> portToOpen;
