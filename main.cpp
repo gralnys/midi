@@ -4,6 +4,9 @@
 
 using namespace std;
 
+// Function prototypes
+void getOpenPorts(RtMidiIn*, RtMidiOut*);
+
 int main() {
     // These bois point to a midi port
     RtMidiIn *midiIn = nullptr;
@@ -25,6 +28,23 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    // Initialize command prompt
+    string word;
+    do {
+        cout << "> ";
+        cin >> word;
+
+        if (word == "ports") getOpenPorts(midiIn, midiOut);
+    } while(word != "exit");
+
+    delete midiIn;
+    delete midiOut;
+
+    return 0;
+}
+
+// Prints out the open input and output MIDI ports
+void getOpenPorts(RtMidiIn* midiIn, RtMidiOut* midiOut) {
     // Find open input ports
     unsigned int nPorts = midiIn->getPortCount();
     cout << "There are " << nPorts << " open MIDI ports" << endl;
@@ -35,11 +55,10 @@ int main() {
             portName = midiIn->getPortName(i);
         } catch(RtMidiError &error) {
             error.printMessage();
-            goto cleanup;
+            return;
         }
-        cout << "\tInput Port #" << i + 1 << ": " << portName << endl;
+        cout << "  Input Port #" << i + 1 << ": " << portName << endl;
     }
-    cout << endl;
 
     // Print open output MIDI ports
     nPorts = midiOut->getPortCount();
@@ -49,15 +68,8 @@ int main() {
             portName = midiOut->getPortName(i);
         } catch(RtMidiError &error) {
             error.printMessage();
-            goto cleanup;
+            return;
         }
-        cout << "\tOutput port #" << i + 1 << ": " << portName << endl;
+        cout << "  Output port #" << i + 1 << ": " << portName << endl;
     }
-    cout << endl;
-
-    cleanup:
-    delete midiIn;
-    delete midiOut;
-
-    return 0;
 }
