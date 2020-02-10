@@ -28,15 +28,38 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // Initialize command prompt
+    // Initialize super dumb command prompt
     string word;
+    string argument;
     do {
         cout << "> ";
         cin >> word;
 
         if (word == "ports") getOpenPorts(midiIn, midiOut);
+        else if (word == "open") {
+            int portToOpen;
+            cin >> argument;
+            cin >> portToOpen;
+            if (argument == "input")
+                try {
+                    midiIn->openPort(portToOpen - 1);
+                } catch(RtMidiError &error) {
+                    error.printMessage();
+                    goto cleanup;
+                }
+            else if (argument == "output")
+                try {
+                    midiOut->openPort(portToOpen - 1);
+                } catch(RtMidiError &error) {
+                    error.printMessage();
+                    goto cleanup;
+                }
+            else cout << "Invalid command" << endl;
+        }
+        else cout << "Invalid command" << endl;
     } while(word != "exit");
 
+    cleanup:
     delete midiIn;
     delete midiOut;
 
