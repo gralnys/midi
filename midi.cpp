@@ -83,7 +83,7 @@ int main() {
                 messages.clear();
             }
         }
-        else cout << "Invalid command" << endl;
+        else if (word != "exit") cout << "Invalid command" << endl;
     } while(word != "exit");
 
     cleanup:
